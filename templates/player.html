@@ -7,12 +7,12 @@
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; }
         .player-container { max-width: 1100px; margin: auto; padding: 20px; }
-        .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; }
+        .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; box-shadow: 0 0 20px rgba(255,0,0,0.2); }
         video { width: 100%; height: 100%; }
         .info { margin-top: 20px; padding: 0 10px; }
         h1 { font-size: 1.4rem; margin: 10px 0; }
-        .author { color: #aaa; margin-bottom: 20px; font-weight: bold; }
-        .desc { background: #1a1a1a; padding: 15px; border-radius: 8px; font-size: 0.9rem; color: #ccc; line-height: 1.6; }
+        .author { color: #aaa; margin-bottom: 20px; font-weight: bold; font-size: 1.1rem; }
+        .desc { background: #1a1a1a; padding: 15px; border-radius: 8px; font-size: 0.9rem; color: #ccc; line-height: 1.6; overflow-wrap: break-word; }
     </style>
 </head>
 <body>
@@ -22,7 +22,7 @@
         </div>
         <div class="info">
             <h1>{{ data.title }}</h1>
-            <p class="author">{{ data.author }}</p>
+            <p class="author">投稿者: {{ data.author }}</p>
             <div class="desc">{{ data.description | safe }}</div>
         </div>
     </div>
@@ -30,16 +30,22 @@
     <script>
         (function(){
             var url = "{{ data.dash_url }}";
-            var player = dashjs.MediaPlayer().create();
-            player.initialize(document.querySelector("#videoPlayer"), url, true);
-            
-            // Render環境などの負荷に合わせてバッファ設定を調整
-            player.updateSettings({
-                'streaming': {
-                    'abr': { 'initialBitrate': { 'video': 5000 } },
-                    'buffer': { 'stableBufferTime': 20, 'bufferTimeAtTopQuality': 40 }
-                }
-            });
+            var videoElement = document.querySelector("#videoPlayer");
+
+            // URLが .mpd (DASH) を含むかチェック
+            if (url.includes(".mpd") || url.includes("dash")) {
+                var player = dashjs.MediaPlayer().create();
+                player.initialize(videoElement, url, true);
+                player.updateSettings({
+                    'streaming': {
+                        'abr': { 'initialBitrate': { 'video': 5000 } }
+                    }
+                });
+            } else {
+                // フォールバック(yudlp)などで直接URLが返ってきた場合、通常のvideoタグとして再生
+                videoElement.src = url;
+                videoElement.play();
+            }
         })();
     </script>
 </body>
