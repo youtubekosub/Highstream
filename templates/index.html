@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>High Quality Proxy Player</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #1e1e1e; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #333; border-radius: 6px; background: #2a2a2a; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #ff0000; border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #cc0000; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>HQ Video Proxy</h2>
+        <form action="/player" method="post">
+            <input type="text" name="video_url" placeholder="YouTube URL または ID" required>
+            <button type="submit">高画質で再生</button>
+        </form>
+    </div>
+</body>
+</html>
